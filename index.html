@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color-Coded Matrix with JSON (Click Tooltip)</title>
+    <style>
+        table {
+            width: 60%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            text-align: center;
+            font-size: 18px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .buttons {
+            text-align: center;
+            margin: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 14px;
+            white-space: nowrap;
+            display: none;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="buttons">
+        <button onclick="showMatrix(1)">Antes (9:30)</button>
+        <button onclick="showMatrix(2)">Después (9:55)</button>
+    </div>
+    
+    <table id="matrixTable"></table>
+
+    <script>
+        const messages = [
+            "Important Data", "Check this out!", "Warning!", "Low Value", "High Value Detected",
+            "Stable", "Monitor Closely", "Critical Alert", "Needs Review", "All Good"
+        ];
+
+        function getColor(value) {
+            if (value <= 25) return "green";
+            if (value <= 50) return "yellow";
+            if (value <= 75) return "orange";
+            return "red";
+        }
+
+        function generateMatrixJSON(rows, cols) {
+            let matrix = [];
+            for (let i = 0; i < rows; i++) {
+                let row = [];
+                for (let j = 0; j < cols; j++) {
+                    let value = Math.floor(Math.random() * 101);
+                    row.push({
+                        value: value,
+                        color: getColor(value),
+                        message: messages[Math.floor(Math.random() * messages.length)]
+                    });
+                }
+                matrix.push(row);
+            }
+            return matrix;
+        }
+
+        let matrix1 = generateMatrixJSON(8, 8);
+        let matrix2 = generateMatrixJSON(8, 8);
+
+        function renderMatrix(matrix) {
+            let table = document.getElementById("matrixTable");
+            table.innerHTML = ""; // Clear table
+
+            let headerRow = table.insertRow();
+            let labelCell = headerRow.insertCell();
+            labelCell.textContent = "DIS0001FOA";
+            labelCell.colSpan = 1;
+            labelCell.style.fontWeight = "bold";
+
+            // Create column headers A-H
+            for (let i = 0; i < matrix[0].length; i++) {
+                let th = document.createElement("th");
+                th.textContent = String.fromCharCode(65 + i);
+                headerRow.appendChild(th);
+            }
+
+            for (let i = 0; i < matrix.length; i++) {
+                let row = table.insertRow();
+                let th = document.createElement("th");
+                th.textContent = i + 1;
+                row.appendChild(th);
+
+                for (let j = 0; j < matrix[i].length; j++) {
+                    let cell = row.insertCell();
+                    let cellData = matrix[i][j];
+
+                    cell.textContent = cellData.value;
+                    cell.style.backgroundColor = cellData.color;
+                    cell.style.color = "black";
+
+                    // Add tooltip effect
+                    let tooltip = document.createElement("div");
+                    tooltip.classList.add("tooltip");
+                    tooltip.textContent = `${cellData.message} (Cell: ${i + 1}${String.fromCharCode(65 + j)})`;
+                    cell.appendChild(tooltip);
+
+                    // Click event to show/hide tooltip
+                    cell.addEventListener("click", function (event) {
+                        hideAllTooltips();
+                        tooltip.style.display = "block";
+                        tooltip.style.left = "50%";
+                        tooltip.style.top = "-30px";
+                        tooltip.style.transform = "translateX(-50%)";
+                        event.stopPropagation(); // Prevent event from bubbling to document
+                    });
+                }
+            }
+        }
+
+        function showMatrix(matrixNumber) {
+            renderMatrix(matrixNumber === 1 ? matrix1 : matrix2);
+        }
+
+        function hideAllTooltips() {
+            document.querySelectorAll(".tooltip").forEach(tooltip => {
+                tooltip.style.display = "none";
+            });
+        }
+
+        // Hide tooltip when clicking outside a cell
+        document.addEventListener("click", hideAllTooltips);
+
+        window.onload = () => showMatrix(1);
+    </script>
+
+</body>
+</html>
