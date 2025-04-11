@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,10 +15,6 @@
             margin: 30px 0 10px;
             font-size: 1.5rem;
             text-align: center;
-        }
-        .metadata {
-            text-align: center;
-            margin-bottom: 10px;
         }
         table {
             margin: 0 auto 40px auto;
@@ -73,8 +70,6 @@
 </head>
 <body>
 
-<div id="container"></div>
-
 <div id="info-modal" class="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="document.getElementById('info-modal').style.display='none'">&times;</span>
@@ -83,221 +78,16 @@
     </div>
 </div>
 
-<script>
-    // Replace with your actual JSON or inject with Thymeleaf
-    const matrixData = {
-        "Respuesta": [ {
-      "tipoPrueba":"porTerminal",
-      "fechaInicio":"2025-04-08 12:20:40",
-      "fechaFin":"2025-04-08 12:21:29",
-      "terminal":"BUR0036FOA1",
-      "cantidadPares":8,
-      "puertoPON":"BCNHGOR02118BUR0036F",
-      "par1":{
-         "telefono":"6865545189",
-         "estadoOperativo":"Down",
-         "estadoAdministrativo":"Up",
-         "potenciaOptica":"",
-         "clasificacionPotencia":"Parametro fuera de rango",
-         "vlan":"1759",
-         "serieModem":"SCOM218163F8",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-1",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      },
-      "par2":{
-         "telefono":"6868426271",
-         "estadoOperativo":"Down",
-         "estadoAdministrativo":"Up",
-         "potenciaOptica":"",
-         "clasificacionPotencia":"Parametro fuera de rango",
-         "vlan":"1367",
-         "serieModem":"ZXYG162653A2",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-2",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      },
-      "par3":{
-         "telefono":"6868432422",
-         "estadoOperativo":"Down",
-         "estadoAdministrativo":"Up",
-         "potenciaOptica":"",
-         "clasificacionPotencia":"Parametro fuera de rango",
-         "vlan":"1759",
-         "serieModem":"HWTCE313C0A3",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-3",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      },
-      "par4":{
-         "telefono":"6865525686",
-         "estadoOperativo":"Down",
-         "estadoAdministrativo":"Up",
-         "potenciaOptica":"",
-         "clasificacionPotencia":"Parametro fuera de rango",
-         "vlan":"1759",
-         "serieModem":"SCOM21707567",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-4",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      },
-      "par5":{
-         "telefono":"6865543547",
-         "estadoOperativo":"Down",
-         "estadoAdministrativo":"Up",
-         "potenciaOptica":"",
-         "clasificacionPotencia":"Parametro fuera de rango",
-         "vlan":"1759",
-         "serieModem":"SCOM2286445A",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-5",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      },
-      "par6":{
-         "telefono":"6865141561",
-         "estadoOperativo":"Down",
-         "estadoAdministrativo":"Up",
-         "potenciaOptica":"",
-         "clasificacionPotencia":"Parametro fuera de rango",
-         "vlan":"1759",
-         "serieModem":"HWTC6C9DD19E",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-6",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      },
-      "par7":{
-         "telefono":"6865545397",
-         "estadoOperativo":"Down",
-         "estadoAdministrativo":"Up",
-         "potenciaOptica":"",
-         "clasificacionPotencia":"Parametro fuera de rango",
-         "vlan":"1759",
-         "serieModem":"HWTCDE8810A2",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-7",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      },
-      "par8":{
-         "telefono":"6865522084",
-         "estadoOperativo":"Down",
-         "estadoAdministrativo":"Up",
-         "potenciaOptica":"",
-         "clasificacionPotencia":"Parametro fuera de rango",
-         "vlan":"1759",
-         "serieModem":"HWTC1A069A9E",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-8",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      }
-   } , {
-      "tipoPrueba":"porTerminal",
-      "fechaInicio":"2025-04-08 12:24:10",
-      "fechaFin":"2025-04-08 12:25:02",
-      "terminal":"BUR0036FOA8",
-      "cantidadPares":8,
-      "puertoPON":"BCNHGOR02118BUR0036F",
-      "par57":{
-         "telefono":"6865524574",
-         "estadoOperativo":"Up",
-         "estadoAdministrativo":"Up",
-         "potenciaOptica":-22.359999999999999,
-         "clasificacionPotencia":"Buena recepcion",
-         "vlan":"1759",
-         "serieModem":"HWTC7F90699E",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-57",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      },
-      "par58":{
-         "telefono":"6865659510",
-         "estadoOperativo":"Up",
-         "estadoAdministrativo":"Up",
-         "potenciaOptica":-26.990000000000002,
-         "clasificacionPotencia":"Parametros en limite",
-         "vlan":"1759",
-         "serieModem":"HWTC7F04B69E",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-58",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      },
-      "par59":{
-         "telefono":"6865545100",
-         "estadoOperativo":"Down",
-         "estadoAdministrativo":"Up",
-         "potenciaOptica":"",
-         "clasificacionPotencia":"Parametro fuera de rango",
-         "vlan":"1759",
-         "serieModem":"SCOM207C7E84",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-59",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      },
-      "par60":{
-         "telefono":"6865543672",
-         "estadoOperativo":"Down",
-         "estadoAdministrativo":"Up",
-         "potenciaOptica":"",
-         "clasificacionPotencia":"Parametro fuera de rango",
-         "vlan":"1759",
-         "serieModem":"SCOM201032FB",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-60",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      },
-      "par61":{
-         "telefono":"6865546572",
-         "estadoOperativo":"Up",
-         "estadoAdministrativo":"Up",
-         "potenciaOptica":-19.830000000000002,
-         "clasificacionPotencia":"Buena recepcion",
-         "vlan":"1759",
-         "serieModem":"HWTC933A269E",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-61",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      },
-      "par62":{
-         "telefono":"6865547203",
-         "estadoOperativo":"Up",
-         "estadoAdministrativo":"Up",
-         "potenciaOptica":-26.990000000000002,
-         "clasificacionPotencia":"Parametros en limite",
-         "vlan":"1759",
-         "serieModem":"HWTC9302559E",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-62",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      },
-      "par63":{
-         "telefono":"6865544692",
-         "estadoOperativo":"Up",
-         "estadoAdministrativo":"Up",
-         "potenciaOptica":-18.120000000000001,
-         "clasificacionPotencia":"Buena recepcion",
-         "vlan":"1759",
-         "serieModem":"HWTC54E8549E",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-63",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      },
-      "par64":{
-         "telefono":"",
-         "estadoOperativo":"Down",
-         "estadoAdministrativo":"Down",
-         "potenciaOptica":"",
-         "clasificacionPotencia":"Parametro fuera de rango",
-         "vlan":"",
-         "serieModem":"",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-64",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      }
-   }
-   ]
-    };
+<table id="matrix-table"></table>
 
+<script>
+    let matrixData = "{\r\n   \"Respuesta\": [ {\r\n      \"tipoPrueba\":\"porTerminal\",\r\n      \"fechaInicio\":\"2025-04-08 12:20:40\",\r\n      \"fechaFin\":\"2025-04-08 12:21:29\",\r\n      \"terminal\":\"BUR0036FOA1\",\r\n      \"cantidadPares\":8,\r\n      \"puertoPON\":\"BCNHGOR02118BUR0036F\",\r\n      \"par1\":{\r\n         \"telefono\":\"6865545189\",\r\n         \"estadoOperativo\":\"Down\",\r\n         \"estadoAdministrativo\":\"Up\",\r\n         \"potenciaOptica\":\"\",\r\n         \"clasificacionPotencia\":\"Parametro fuera de rango\",\r\n         \"vlan\":\"1759\",\r\n         \"serieModem\":\"SCOM218163F8\",\r\n         \"dropID\":\"BCNGGONZALEZORTEG-02:0-0-17-6-1\",\r\n         \"codigo\":\"000\",\r\n         \"descripcion\":\"EXITO\"\r\n      },\r\n      \"par2\":{\r\n         \"telefono\":\"6868426271\",\r\n         \"estadoOperativo\":\"Down\",\r\n         \"estadoAdministrativo\":\"Up\",\r\n         \"potenciaOptica\":\"\",\r\n         \"clasificacionPotencia\":\"Parametro fuera de rango\",\r\n         \"vlan\":\"1367\",\r\n         \"serieModem\":\"ZXYG162653A2\",\r\n         \"dropID\":\"BCNGGONZALEZORTEG-02:0-0-17-6-2\",\r\n         \"codigo\":\"000\",\r\n         \"descripcion\":\"EXITO\"\r\n      },\r\n      \"par3\":{\r\n         \"telefono\":\"6868432422\",\r\n         \"estadoOperativo\":\"Down\",\r\n         \"estadoAdministrativo\":\"Up\",\r\n         \"potenciaOptica\":\"\",\r\n         \"clasificacionPotencia\":\"Parametro fuera de rango\",\r\n         \"vlan\":\"1759\",\r\n         \"serieModem\":\"HWTCE313C0A3\",\r\n         \"dropID\":\"BCNGGONZALEZORTEG-02:0-0-17-6-3\",\r\n         \"codigo\":\"000\",\r\n         \"descripcion\":\"EXITO\"\r\n      },\r\n      \"par4\":{\r\n         \"telefono\":\"6865525686\",\r\n         \"estadoOperativo\":\"Down\",\r\n         \"estadoAdministrativo\":\"Up\",\r\n         \"potenciaOptica\":\"\",\r\n         \"clasificacionPotencia\":\"Parametro fuera de rango\",\r\n         \"vlan\":\"1759\",\r\n         \"serieModem\":\"SCOM21707567\",\r\n         \"dropID\":\"BCNGGONZALEZORTEG-02:0-0-17-6-4\",\r\n         \"codigo\":\"000\",\r\n         \"descripcion\":\"EXITO\"\r\n      },\r\n      \"par5\":{\r\n         \"telefono\":\"6865543547\",\r\n         \"estadoOperativo\":\"Down\",\r\n         \"estadoAdministrativo\":\"Up\",\r\n         \"potenciaOptica\":\"\",\r\n         \"clasificacionPotencia\":\"Parametro fuera de rango\",\r\n         \"vlan\":\"1759\",\r\n         \"serieModem\":\"SCOM2286445A\",\r\n         \"dropID\":\"BCNGGONZALEZORTEG-02:0-0-17-6-5\",\r\n         \"codigo\":\"000\",\r\n         \"descripcion\":\"EXITO\"\r\n      },\r\n      \"par6\":{\r\n         \"telefono\":\"6865141561\",\r\n         \"estadoOperativo\":\"Down\",\r\n         \"estadoAdministrativo\":\"Up\",\r\n         \"potenciaOptica\":\"\",\r\n         \"clasificacionPotencia\":\"Parametro fuera de rango\",\r\n         \"vlan\":\"1759\",\r\n         \"serieModem\":\"HWTC6C9DD19E\",\r\n         \"dropID\":\"BCNGGONZALEZORTEG-02:0-0-17-6-6\",\r\n         \"codigo\":\"000\",\r\n         \"descripcion\":\"EXITO\"\r\n      },\r\n      \"par7\":{\r\n         \"telefono\":\"6865545397\",\r\n         \"estadoOperativo\":\"Down\",\r\n         \"estadoAdministrativo\":\"Up\",\r\n         \"potenciaOptica\":\"\",\r\n         \"clasificacionPotencia\":\"Parametro fuera de rango\",\r\n         \"vlan\":\"1759\",\r\n         \"serieModem\":\"HWTCDE8810A2\",\r\n         \"dropID\":\"BCNGGONZALEZORTEG-02:0-0-17-6-7\",\r\n         \"codigo\":\"000\",\r\n         \"descripcion\":\"EXITO\"\r\n      },\r\n      \"par8\":{\r\n         \"telefono\":\"6865522084\",\r\n         \"estadoOperativo\":\"Down\",\r\n         \"estadoAdministrativo\":\"Up\",\r\n         \"potenciaOptica\":\"\",\r\n         \"clasificacionPotencia\":\"Parametro fuera de rango\",\r\n         \"vlan\":\"1759\",\r\n         \"serieModem\":\"HWTC1A069A9E\",\r\n         \"dropID\":\"BCNGGONZALEZORTEG-02:0-0-17-6-8\",\r\n         \"codigo\":\"000\",\r\n         \"descripcion\":\"EXITO\"\r\n      }\r\n   } , {\r\n      \"tipoPrueba\":\"porTerminal\",\r\n      \"fechaInicio\":\"2025-04-08 12:24:10\",\r\n      \"fechaFin\":\"2025-04-08 12:25:02\",\r\n      \"terminal\":\"BUR0036FOA8\",\r\n      \"cantidadPares\":8,\r\n      \"puertoPON\":\"BCNHGOR02118BUR0036F\",\r\n      \"par57\":{\r\n         \"telefono\":\"6865524574\",\r\n         \"estadoOperativo\":\"Up\",\r\n         \"estadoAdministrativo\":\"Up\",\r\n         \"potenciaOptica\":-22.359999999999999,\r\n         \"clasificacionPotencia\":\"Buena recepcion\",\r\n         \"vlan\":\"1759\",\r\n         \"serieModem\":\"HWTC7F90699E\",\r\n         \"dropID\":\"BCNGGONZALEZORTEG-02:0-0-17-6-57\",\r\n         \"codigo\":\"000\",\r\n         \"descripcion\":\"EXITO\"\r\n      },\r\n      \"par58\":{\r\n         \"telefono\":\"6865659510\",\r\n         \"estadoOperativo\":\"Up\",\r\n         \"estadoAdministrativo\":\"Up\",\r\n         \"potenciaOptica\":-26.990000000000002,\r\n         \"clasificacionPotencia\":\"Parametros en limite\",\r\n         \"vlan\":\"1759\",\r\n         \"serieModem\":\"HWTC7F04B69E\",\r\n         \"dropID\":\"BCNGGONZALEZORTEG-02:0-0-17-6-58\",\r\n         \"codigo\":\"000\",\r\n         \"descripcion\":\"EXITO\"\r\n      },\r\n      \"par59\":{\r\n         \"telefono\":\"6865545100\",\r\n         \"estadoOperativo\":\"Down\",\r\n         \"estadoAdministrativo\":\"Up\",\r\n         \"potenciaOptica\":\"\",\r\n         \"clasificacionPotencia\":\"Parametro fuera de rango\",\r\n         \"vlan\":\"1759\",\r\n         \"serieModem\":\"SCOM207C7E84\",\r\n         \"dropID\":\"BCNGGONZALEZORTEG-02:0-0-17-6-59\",\r\n         \"codigo\":\"000\",\r\n         \"descripcion\":\"EXITO\"\r\n      },\r\n      \"par60\":{\r\n         \"telefono\":\"6865543672\",\r\n         \"estadoOperativo\":\"Down\",\r\n         \"estadoAdministrativo\":\"Up\",\r\n         \"potenciaOptica\":\"\",\r\n         \"clasificacionPotencia\":\"Parametro fuera de rango\",\r\n         \"vlan\":\"1759\",\r\n         \"serieModem\":\"SCOM201032FB\",\r\n         \"dropID\":\"BCNGGONZALEZORTEG-02:0-0-17-6-60\",\r\n         \"codigo\":\"000\",\r\n         \"descripcion\":\"EXITO\"\r\n      },\r\n      \"par61\":{\r\n         \"telefono\":\"6865546572\",\r\n         \"estadoOperativo\":\"Up\",\r\n         \"estadoAdministrativo\":\"Up\",\r\n         \"potenciaOptica\":-19.830000000000002,\r\n         \"clasificacionPotencia\":\"Buena recepcion\",\r\n         \"vlan\":\"1759\",\r\n         \"serieModem\":\"HWTC933A269E\",\r\n         \"dropID\":\"BCNGGONZALEZORTEG-02:0-0-17-6-61\",\r\n         \"codigo\":\"000\",\r\n         \"descripcion\":\"EXITO\"\r\n      },\r\n      \"par62\":{\r\n         \"telefono\":\"6865547203\",\r\n         \"estadoOperativo\":\"Up\",\r\n         \"estadoAdministrativo\":\"Up\",\r\n         \"potenciaOptica\":-26.990000000000002,\r\n         \"clasificacionPotencia\":\"Parametros en limite\",\r\n         \"vlan\":\"1759\",\r\n         \"serieModem\":\"HWTC9302559E\",\r\n         \"dropID\":\"BCNGGONZALEZORTEG-02:0-0-17-6-62\",\r\n         \"codigo\":\"000\",\r\n         \"descripcion\":\"EXITO\"\r\n      },\r\n      \"par63\":{\r\n         \"telefono\":\"6865544692\",\r\n         \"estadoOperativo\":\"Up\",\r\n         \"estadoAdministrativo\":\"Up\",\r\n         \"potenciaOptica\":-18.120000000000001,\r\n         \"clasificacionPotencia\":\"Buena recepcion\",\r\n         \"vlan\":\"1759\",\r\n         \"serieModem\":\"HWTC54E8549E\",\r\n         \"dropID\":\"BCNGGONZALEZORTEG-02:0-0-17-6-63\",\r\n         \"codigo\":\"000\",\r\n         \"descripcion\":\"EXITO\"\r\n      },\r\n      \"par64\":{\r\n         \"telefono\":\"\",\r\n         \"estadoOperativo\":\"Down\",\r\n         \"estadoAdministrativo\":\"Down\",\r\n         \"potenciaOptica\":\"\",\r\n         \"clasificacionPotencia\":\"Parametro fuera de rango\",\r\n         \"vlan\":\"\",\r\n         \"serieModem\":\"\",\r\n         \"dropID\":\"BCNGGONZALEZORTEG-02:0-0-17-6-64\",\r\n         \"codigo\":\"000\",\r\n         \"descripcion\":\"EXITO\"\r\n      }\r\n   }\r\n   ]\r\n}\r\n";
+    matrixData = JSON.parse(matrixData);
+</script>
+
+<script>
     const respuestas = matrixData.Respuesta || [];
-    const container = document.getElementById("container");
+    const table = document.getElementById("matrix-table");
 
     const potenciaColor = (clasificacion) => {
         const value = (clasificacion || '').toLowerCase();
@@ -325,23 +115,25 @@
         modal.style.display = 'flex';
     };
 
-    const parKeys = [...new Set(
-        respuestas.flatMap(r =>
-            Object.keys(r).filter(k => /^par\\d+$/i.test(k))
-        )
-    )].sort((a, b) => parseInt(a.replace('par', '')) - parseInt(b.replace('par', '')));
+    // Determine max number of columns dynamically
+    let maxColumns = 0;
+    const terminalParKeys = respuestas.map(respuesta => {
+        const keys = Object.keys(respuesta)
+            .filter(k => /^par\d+$/i.test(k))
+            .sort((a, b) => parseInt(a.replace('par', '')) - parseInt(b.replace('par', '')));
+        maxColumns = Math.max(maxColumns, keys.length);
+        return keys;
+    });
 
-
-    // Create table with shared headers
-    const table = document.createElement("table");
+    // Create header row with dynamic size
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
     headerRow.innerHTML = `<th></th>`;
-    parKeys.forEach((_, i) => {
+    for (let i = 1; i <= maxColumns; i++) {
         const th = document.createElement("th");
-        th.textContent = i + 1;
+        th.textContent = i;
         headerRow.appendChild(th);
-    });
+    }
     thead.appendChild(headerRow);
     table.appendChild(thead);
 
@@ -350,36 +142,37 @@
     respuestas.forEach((respuesta, index) => {
         const terminal = respuesta.terminal || `Terminal ${index + 1}`;
         const suffix = terminal.split("FO")[1] || '?';
-
-        const title = document.createElement("h2");
-        title.textContent = `Terminal: ${terminal}`;
-        container.appendChild(title);
-
-        const metadata = document.createElement("div");
-        metadata.className = "metadata";
-        metadata.innerHTML = `<p><strong>Fecha de Inicio:</strong> ${respuesta.fechaInicio || 'N/A'}</p>`;
-        container.appendChild(metadata);
-
         const row = document.createElement("tr");
         row.innerHTML = `<td><strong>${suffix}</strong></td>`;
-        parKeys.forEach(k => {
-            const par = respuesta[k] || {};
-            const potencia = par.potenciaOptica;
-            let display = potencia;
-            if (potencia !== '' && !isNaN(potencia)) {
-                display = parseFloat(potencia).toFixed(2);
-            }
+
+        const parKeys = terminalParKeys[index];
+
+        for (let i = 0; i < maxColumns; i++) {
+            const key = parKeys[i];
+            const par = key ? respuesta[key] : null;
             const td = document.createElement("td");
-            td.textContent = display || '—';
-            td.className = potenciaColor(par.clasificacionPotencia);
-            td.onclick = () => showModal(par);
+
+            if (par) {
+                const potencia = par.potenciaOptica;
+                let display = potencia;
+                if (potencia !== '' && !isNaN(potencia)) {
+                    display = parseFloat(potencia).toFixed(2);
+                }
+                td.textContent = display || '—';
+                td.className = potenciaColor(par.clasificacionPotencia);
+                td.onclick = () => showModal(par);
+            } else {
+                td.textContent = '—';
+                td.className = 'empty';
+            }
+
             row.appendChild(td);
-        });
+        }
+
         tbody.appendChild(row);
     });
 
     table.appendChild(tbody);
-    container.appendChild(table);
 
     window.onclick = (event) => {
         const modal = document.getElementById("info-modal");
