@@ -20,14 +20,15 @@
             margin: 0 auto 40px auto;
             border-collapse: collapse;
             color: #0f0;
-            width: auto;
+            width: 100%;
+            table-layout: fixed;
         }
         th, td {
             border: 1px solid #0f0;
             padding: 10px;
-            min-width: 60px;
             text-align: center;
             font-size: 1rem;
+            word-wrap: break-word;
         }
         th {
             background-color: #111;
@@ -65,6 +66,12 @@
             color: #0f0;
             font-size: 20px;
             cursor: pointer;
+        }
+        @media (max-width: 768px) {
+            th, td {
+                font-size: 0.8rem;
+                padding: 6px;
+            }
         }
     </style>
 </head>
@@ -115,7 +122,6 @@
         modal.style.display = 'flex';
     };
 
-    // Determine max number of columns dynamically
     let maxColumns = 0;
     const terminalParKeys = respuestas.map(respuesta => {
         const keys = Object.keys(respuesta)
@@ -125,7 +131,6 @@
         return keys;
     });
 
-    // Create header row with dynamic size
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
     headerRow.innerHTML = `<th></th>`;
