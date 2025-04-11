@@ -2,62 +2,43 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Potencia Óptica</title>
+    <title>Matrices por Terminal</title>
     <style>
         body {
             background-color: #000;
             font-family: monospace;
-            font-size: 1.1rem;
             color: #0f0;
             padding: 20px;
+        }
+        h2 {
+            margin: 30px 0 10px;
+            font-size: 1.5rem;
             text-align: center;
         }
-
-        h2 {
+        .metadata {
+            text-align: center;
             margin-bottom: 10px;
         }
-
-        .metadata {
-            margin-bottom: 20px;
-        }
-
         table {
-            margin: auto;
+            margin: 0 auto 40px auto;
             border-collapse: collapse;
             color: #0f0;
+            width: auto;
         }
-
         th, td {
             border: 1px solid #0f0;
-            padding: 12px;
+            padding: 10px;
             min-width: 60px;
+            text-align: center;
             font-size: 1rem;
         }
-
         th {
             background-color: #111;
         }
-
-        .ok {
-            background-color: #0f0;
-            color: #000;
-        }
-
-        .warn {
-            background-color: #ff0;
-            color: #000;
-        }
-
-        .low {
-            background-color: #f00;
-            color: #fff;
-        }
-
-        .empty {
-            background-color: #333;
-            color: #888;
-        }
-
+        .ok { background-color: #0f0; color: #000; }
+        .warn { background-color: #ff0; color: #000; }
+        .low { background-color: #f00; color: #fff; }
+        .empty { background-color: #333; color: #888; }
         .modal {
             display: none;
             position: fixed;
@@ -70,24 +51,16 @@
             justify-content: center;
             align-items: center;
         }
-
         .modal-content {
             background-color: #111;
             border: 2px solid #0f0;
             padding: 20px;
             color: #0f0;
             max-width: 90%;
-            width: 90%;
-            position: relative;
             font-size: 1.2rem;
             line-height: 1.5;
         }
-
-        .modal-content p {
-            font-size: 1.3rem;
-            margin: 8px 0;
-        }
-
+        .modal-content p { margin: 8px 0; }
         .close-btn {
             position: absolute;
             top: 5px;
@@ -96,33 +69,11 @@
             font-size: 20px;
             cursor: pointer;
         }
-
-        .in-telegram th, .in-telegram td, .in-telegram .modal-content {
-            font-size: 1.2rem;
-        }
-
-        .in-telegram .modal-content p {
-            font-size: 1.4rem;
-        }
     </style>
 </head>
 <body>
 
-<h2 id="table-title">Terminal</h2>
-<div class="metadata" id="test-info"></div>
-
-<table id="potencia-table">
-    <thead>
-        <tr id="column-header">
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr id="potencia-row">
-            <td><strong>—</strong></td>
-        </tr>
-    </tbody>
-</table>
+<div id="container"></div>
 
 <div id="info-modal" class="modal">
     <div class="modal-content">
@@ -133,14 +84,112 @@
 </div>
 
 <script>
-    // Detect Telegram Mini App
-    if (window.Telegram && Telegram.WebApp) {
-        document.body.classList.add('in-telegram');
-    }
-
-    // Sample JSON for standalone test
-    let matrixData = `{
-        "Respuesta":{
+    // Replace with your actual JSON or inject with Thymeleaf
+    const matrixData = {
+        "Respuesta": [ {
+      "tipoPrueba":"porTerminal",
+      "fechaInicio":"2025-04-08 12:20:40",
+      "fechaFin":"2025-04-08 12:21:29",
+      "terminal":"BUR0036FOA1",
+      "cantidadPares":8,
+      "puertoPON":"BCNHGOR02118BUR0036F",
+      "par1":{
+         "telefono":"6865545189",
+         "estadoOperativo":"Down",
+         "estadoAdministrativo":"Up",
+         "potenciaOptica":"",
+         "clasificacionPotencia":"Parametro fuera de rango",
+         "vlan":"1759",
+         "serieModem":"SCOM218163F8",
+         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-1",
+         "codigo":"000",
+         "descripcion":"EXITO"
+      },
+      "par2":{
+         "telefono":"6868426271",
+         "estadoOperativo":"Down",
+         "estadoAdministrativo":"Up",
+         "potenciaOptica":"",
+         "clasificacionPotencia":"Parametro fuera de rango",
+         "vlan":"1367",
+         "serieModem":"ZXYG162653A2",
+         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-2",
+         "codigo":"000",
+         "descripcion":"EXITO"
+      },
+      "par3":{
+         "telefono":"6868432422",
+         "estadoOperativo":"Down",
+         "estadoAdministrativo":"Up",
+         "potenciaOptica":"",
+         "clasificacionPotencia":"Parametro fuera de rango",
+         "vlan":"1759",
+         "serieModem":"HWTCE313C0A3",
+         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-3",
+         "codigo":"000",
+         "descripcion":"EXITO"
+      },
+      "par4":{
+         "telefono":"6865525686",
+         "estadoOperativo":"Down",
+         "estadoAdministrativo":"Up",
+         "potenciaOptica":"",
+         "clasificacionPotencia":"Parametro fuera de rango",
+         "vlan":"1759",
+         "serieModem":"SCOM21707567",
+         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-4",
+         "codigo":"000",
+         "descripcion":"EXITO"
+      },
+      "par5":{
+         "telefono":"6865543547",
+         "estadoOperativo":"Down",
+         "estadoAdministrativo":"Up",
+         "potenciaOptica":"",
+         "clasificacionPotencia":"Parametro fuera de rango",
+         "vlan":"1759",
+         "serieModem":"SCOM2286445A",
+         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-5",
+         "codigo":"000",
+         "descripcion":"EXITO"
+      },
+      "par6":{
+         "telefono":"6865141561",
+         "estadoOperativo":"Down",
+         "estadoAdministrativo":"Up",
+         "potenciaOptica":"",
+         "clasificacionPotencia":"Parametro fuera de rango",
+         "vlan":"1759",
+         "serieModem":"HWTC6C9DD19E",
+         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-6",
+         "codigo":"000",
+         "descripcion":"EXITO"
+      },
+      "par7":{
+         "telefono":"6865545397",
+         "estadoOperativo":"Down",
+         "estadoAdministrativo":"Up",
+         "potenciaOptica":"",
+         "clasificacionPotencia":"Parametro fuera de rango",
+         "vlan":"1759",
+         "serieModem":"HWTCDE8810A2",
+         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-7",
+         "codigo":"000",
+         "descripcion":"EXITO"
+      },
+      "par8":{
+         "telefono":"6865522084",
+         "estadoOperativo":"Down",
+         "estadoAdministrativo":"Up",
+         "potenciaOptica":"",
+         "clasificacionPotencia":"Parametro fuera de rango",
+         "vlan":"1759",
+         "serieModem":"HWTC1A069A9E",
+         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-8",
+         "codigo":"000",
+         "descripcion":"EXITO"
+      }
+   } , {
       "tipoPrueba":"porTerminal",
       "fechaInicio":"2025-04-08 12:24:10",
       "fechaFin":"2025-04-08 12:25:02",
@@ -244,23 +293,11 @@
          "descripcion":"EXITO"
       }
    }
-    }`;
+   ]
+    };
 
-    const data = JSON.parse(matrixData);
-    const respuesta = data.Respuesta || {};
-
-    const terminal = respuesta.terminal || '';
-    const terminalPrefix = terminal.includes("FO") ? terminal.substring(0, terminal.indexOf("FO") + 2) : terminal;
-    const terminalSuffix = terminal.includes("FO") ? terminal.split("FO")[1] : '';
-
-    document.getElementById("table-title").textContent = `Terminal: ${terminalPrefix}`;
-    document.getElementById("test-info").innerHTML = `
-        <p><strong>Fecha de Inicio:</strong> ${respuesta.fechaInicio || 'N/A'}</p>
-    `;
-
-    const headerRow = document.getElementById("column-header");
-    const valueRow = document.getElementById("potencia-row");
-    valueRow.innerHTML = `<td><strong>${terminalSuffix || '—'}</strong></td>`;
+    const respuestas = matrixData.Respuesta || [];
+    const container = document.getElementById("container");
 
     const potenciaColor = (clasificacion) => {
         const value = (clasificacion || '').toLowerCase();
@@ -273,7 +310,6 @@
     const showModal = (par) => {
         const modal = document.getElementById("info-modal");
         const body = document.getElementById("modal-body");
-
         body.innerHTML = `
             <p><strong>📞 Teléfono:</strong> ${par.telefono || '—'}</p>
             <p><strong>📶 Estado Operativo:</strong> ${par.estadoOperativo || '—'}</p>
@@ -286,39 +322,68 @@
             <p><strong>🧾 Código:</strong> ${par.codigo || '—'}</p>
             <p><strong>📋 Descripción:</strong> ${par.descripcion || '—'}</p>
         `;
-
         modal.style.display = 'flex';
     };
 
-    const parKeys = Object.keys(respuesta)
+    const parKeys = respuestas.length > 0 ? Object.keys(respuestas[0])
         .filter(k => /^par\d+$/i.test(k))
-        .sort((a, b) => parseInt(a.replace('par', '')) - parseInt(b.replace('par', '')));
+        .sort((a, b) => parseInt(a.replace('par', '')) - parseInt(b.replace('par', ''))) : [];
 
-    parKeys.forEach((parKey, index) => {
-        const par = respuesta[parKey];
-        const potencia = par.potenciaOptica;
-        let displayValue = potencia;
-        if (potencia !== '' && !isNaN(potencia)) {
-            displayValue = parseFloat(potencia).toFixed(2);
-        }
-
+    // Create table with shared headers
+    const table = document.createElement("table");
+    const thead = document.createElement("thead");
+    const headerRow = document.createElement("tr");
+    headerRow.innerHTML = `<th></th>`;
+    parKeys.forEach((_, i) => {
         const th = document.createElement("th");
-        th.textContent = index + 1;
+        th.textContent = i + 1;
         headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
 
-        const td = document.createElement("td");
-        td.textContent = displayValue || '—';
-        td.className = potenciaColor(par.clasificacionPotencia);
-        td.addEventListener("click", () => showModal(par));
-        valueRow.appendChild(td);
+    const tbody = document.createElement("tbody");
+
+    respuestas.forEach((respuesta, index) => {
+        const terminal = respuesta.terminal || `Terminal ${index + 1}`;
+        const suffix = terminal.split("FO")[1] || '?';
+
+        const title = document.createElement("h2");
+        title.textContent = `Terminal: ${terminal}`;
+        container.appendChild(title);
+
+        const metadata = document.createElement("div");
+        metadata.className = "metadata";
+        metadata.innerHTML = `<p><strong>Fecha de Inicio:</strong> ${respuesta.fechaInicio || 'N/A'}</p>`;
+        container.appendChild(metadata);
+
+        const row = document.createElement("tr");
+        row.innerHTML = `<td><strong>${suffix}</strong></td>`;
+        parKeys.forEach(k => {
+            const par = respuesta[k] || {};
+            const potencia = par.potenciaOptica;
+            let display = potencia;
+            if (potencia !== '' && !isNaN(potencia)) {
+                display = parseFloat(potencia).toFixed(2);
+            }
+            const td = document.createElement("td");
+            td.textContent = display || '—';
+            td.className = potenciaColor(par.clasificacionPotencia);
+            td.onclick = () => showModal(par);
+            row.appendChild(td);
+        });
+        tbody.appendChild(row);
     });
 
-    window.onclick = function(event) {
-        const modal = document.getElementById('info-modal');
+    table.appendChild(tbody);
+    container.appendChild(table);
+
+    window.onclick = (event) => {
+        const modal = document.getElementById("info-modal");
         if (event.target === modal) {
             modal.style.display = "none";
         }
-    };
+    }
 </script>
 
 </body>
