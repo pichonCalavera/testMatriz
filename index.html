@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Potencia Óptica</title>
@@ -79,11 +79,13 @@
             max-width: 90%;
             width: 90%;
             position: relative;
-            font-size: 1rem;
+            font-size: 1.2rem;
+            line-height: 1.5;
         }
 
-        .modal-content h3 {
-            margin-top: 0;
+        .modal-content p {
+            font-size: 1.3rem;
+            margin: 8px 0;
         }
 
         .close-btn {
@@ -91,13 +93,16 @@
             top: 5px;
             right: 10px;
             color: #0f0;
-            font-size: 18px;
+            font-size: 20px;
             cursor: pointer;
         }
 
-        /* Bonus: Telegram-specific style boost */
         .in-telegram th, .in-telegram td, .in-telegram .modal-content {
             font-size: 1.2rem;
+        }
+
+        .in-telegram .modal-content p {
+            font-size: 1.4rem;
         }
     </style>
 </head>
@@ -119,7 +124,6 @@
     </tbody>
 </table>
 
-<!-- Modal -->
 <div id="info-modal" class="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="document.getElementById('info-modal').style.display='none'">&times;</span>
@@ -129,14 +133,14 @@
 </div>
 
 <script>
-    // Telegram Mini App detection
+    // Detect Telegram Mini App
     if (window.Telegram && Telegram.WebApp) {
         document.body.classList.add('in-telegram');
     }
 
-    // Sample JSON for standalone test (replace with Thymeleaf in production)
+    // Sample JSON for standalone test
     let matrixData = `{
-     "Respuesta":{
+        "Respuesta":{
       "tipoPrueba":"porTerminal",
       "fechaInicio":"2025-04-08 12:24:10",
       "fechaFin":"2025-04-08 12:25:02",
@@ -250,9 +254,9 @@
     const terminalSuffix = terminal.includes("FO") ? terminal.split("FO")[1] : '';
 
     document.getElementById("table-title").textContent = `Terminal: ${terminalPrefix}`;
-
-    const testInfo = document.getElementById("test-info");
-    testInfo.innerHTML = `<p><strong>Fecha de Inicio:</strong> ${respuesta.fechaInicio || 'N/A'}</p>`;
+    document.getElementById("test-info").innerHTML = `
+        <p><strong>Fecha de Inicio:</strong> ${respuesta.fechaInicio || 'N/A'}</p>
+    `;
 
     const headerRow = document.getElementById("column-header");
     const valueRow = document.getElementById("potencia-row");
