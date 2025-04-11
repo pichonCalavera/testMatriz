@@ -7,6 +7,7 @@
         body {
             background-color: #000;
             font-family: monospace;
+            font-size: 1.1rem;
             color: #0f0;
             padding: 20px;
             text-align: center;
@@ -28,9 +29,9 @@
 
         th, td {
             border: 1px solid #0f0;
-            padding: 10px;
+            padding: 12px;
             min-width: 60px;
-            text-align: center;
+            font-size: 1rem;
         }
 
         th {
@@ -57,13 +58,14 @@
             color: #888;
         }
 
-        /* Modal styling */
         .modal {
             display: none;
             position: fixed;
             z-index: 999;
-            left: 0; top: 0;
-            width: 100%; height: 100%;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
             background-color: rgba(0, 0, 0, 0.8);
             justify-content: center;
             align-items: center;
@@ -74,9 +76,10 @@
             border: 2px solid #0f0;
             padding: 20px;
             color: #0f0;
-            max-width: 400px;
+            max-width: 90%;
             width: 90%;
             position: relative;
+            font-size: 1rem;
         }
 
         .modal-content h3 {
@@ -91,6 +94,11 @@
             font-size: 18px;
             cursor: pointer;
         }
+
+        /* Bonus: Telegram-specific style boost */
+        .in-telegram th, .in-telegram td, .in-telegram .modal-content {
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 <body>
@@ -100,18 +108,18 @@
 
 <table id="potencia-table">
     <thead>
-    <tr id="column-header">
-        <th></th> <!-- empty corner -->
-    </tr>
+        <tr id="column-header">
+            <th></th>
+        </tr>
     </thead>
     <tbody>
-    <tr id="potencia-row">
-        <td><strong>—</strong></td> <!-- label = terminal suffix -->
-    </tr>
+        <tr id="potencia-row">
+            <td><strong>—</strong></td>
+        </tr>
     </tbody>
 </table>
 
-<!-- Modal Box -->
+<!-- Modal -->
 <div id="info-modal" class="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="document.getElementById('info-modal').style.display='none'">&times;</span>
@@ -120,115 +128,43 @@
     </div>
 </div>
 
-<!-- Thymeleaf-injected JSON -->
-<script th:inline="javascript">
-    //let matrixData = /*[[${resultadoJson}]]*/ '{}';
-	let matrixData = `{		
-   "Respuesta":{
-      "tipoPrueba":"porTerminal",
-      "fechaInicio":"2025-04-08 12:24:10",
-      "fechaFin":"2025-04-08 12:25:02",
-      "terminal":"BUR0036FOA8",
-      "cantidadPares":8,
-      "puertoPON":"BCNHGOR02118BUR0036F",
-      "par57":{
-         "telefono":"6865524574",
-         "estadoOperativo":"Up",
-         "estadoAdministrativo":"Up",
-         "potenciaOptica":-22.359999999999999,
-         "clasificacionPotencia":"Buena recepcion",
-         "vlan":"1759",
-         "serieModem":"HWTC7F90699E",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-57",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      },
-      "par58":{
-         "telefono":"6865659510",
-         "estadoOperativo":"Up",
-         "estadoAdministrativo":"Up",
-         "potenciaOptica":-26.990000000000002,
-         "clasificacionPotencia":"Parametros en limite",
-         "vlan":"1759",
-         "serieModem":"HWTC7F04B69E",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-58",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      },
-      "par59":{
-         "telefono":"6865545100",
-         "estadoOperativo":"Down",
-         "estadoAdministrativo":"Up",
-         "potenciaOptica":"",
-         "clasificacionPotencia":"Parametro fuera de rango",
-         "vlan":"1759",
-         "serieModem":"SCOM207C7E84",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-59",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      },
-      "par60":{
-         "telefono":"6865543672",
-         "estadoOperativo":"Down",
-         "estadoAdministrativo":"Up",
-         "potenciaOptica":"",
-         "clasificacionPotencia":"Parametro fuera de rango",
-         "vlan":"1759",
-         "serieModem":"SCOM201032FB",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-60",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      },
-      "par61":{
-         "telefono":"6865546572",
-         "estadoOperativo":"Up",
-         "estadoAdministrativo":"Up",
-         "potenciaOptica":-19.830000000000002,
-         "clasificacionPotencia":"Buena recepcion",
-         "vlan":"1759",
-         "serieModem":"HWTC933A269E",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-61",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      },
-      "par62":{
-         "telefono":"6865547203",
-         "estadoOperativo":"Up",
-         "estadoAdministrativo":"Up",
-         "potenciaOptica":-26.990000000000002,
-         "clasificacionPotencia":"Parametros en limite",
-         "vlan":"1759",
-         "serieModem":"HWTC9302559E",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-62",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      },
-      "par63":{
-         "telefono":"6865544692",
-         "estadoOperativo":"Up",
-         "estadoAdministrativo":"Up",
-         "potenciaOptica":-18.120000000000001,
-         "clasificacionPotencia":"Buena recepcion",
-         "vlan":"1759",
-         "serieModem":"HWTC54E8549E",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-63",
-         "codigo":"000",
-         "descripcion":"EXITO"
-      },
-      "par64":{
-         "telefono":"",
-         "estadoOperativo":"Down",
-         "estadoAdministrativo":"Down",
-         "potenciaOptica":"",
-         "clasificacionPotencia":"Parametro fuera de rango",
-         "vlan":"",
-         "serieModem":"",
-         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-64",
-         "codigo":"000",
-         "descripcion":"EXITO"
+<script>
+    // Telegram Mini App detection
+    if (window.Telegram && Telegram.WebApp) {
+        document.body.classList.add('in-telegram');
+    }
+
+    // Sample JSON for standalone test (replace with Thymeleaf in production)
+    let matrixData = `{
+      "Respuesta": {
+        "fechaInicio": "2025-04-08 12:24:10",
+        "terminal": "BUR0036FOA8",
+        "par57": {
+          "telefono": "6865524574",
+          "estadoOperativo": "Up",
+          "estadoAdministrativo": "Up",
+          "potenciaOptica": -22.36,
+          "clasificacionPotencia": "Buena recepcion",
+          "vlan": "1759",
+          "serieModem": "HWTC7F90699E",
+          "dropID": "BCNGGONZALEZORTEG-02:0-0-17-6-57",
+          "codigo": "000",
+          "descripcion": "EXITO"
+        },
+        "par58": {
+          "telefono": "6865659510",
+          "estadoOperativo": "Up",
+          "estadoAdministrativo": "Up",
+          "potenciaOptica": -26.99,
+          "clasificacionPotencia": "Parametros en limite",
+          "vlan": "1759",
+          "serieModem": "HWTC7F04B69E",
+          "dropID": "BCNGGONZALEZORTEG-02:0-0-17-6-58",
+          "codigo": "000",
+          "descripcion": "EXITO"
+        }
       }
-   }
-	}`;
+    }`;
 
     const data = JSON.parse(matrixData);
     const respuesta = data.Respuesta || {};
@@ -240,9 +176,7 @@
     document.getElementById("table-title").textContent = `Terminal: ${terminalPrefix}`;
 
     const testInfo = document.getElementById("test-info");
-    testInfo.innerHTML = `
-        <p><strong>Fecha de Inicio:</strong> ${respuesta.fechaInicio || 'N/A'}</p>
-    `;
+    testInfo.innerHTML = `<p><strong>Fecha de Inicio:</strong> ${respuesta.fechaInicio || 'N/A'}</p>`;
 
     const headerRow = document.getElementById("column-header");
     const valueRow = document.getElementById("potencia-row");
@@ -250,11 +184,9 @@
 
     const potenciaColor = (clasificacion) => {
         const value = (clasificacion || '').toLowerCase();
-
         if (value.includes('buena')) return 'ok';
         if (value.includes('limite')) return 'warn';
         if (value.includes('fuera')) return 'low';
-
         return 'empty';
     };
 
