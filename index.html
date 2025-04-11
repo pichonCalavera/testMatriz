@@ -1,158 +1,317 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color-Coded Matrix with JSON (Click Tooltip)</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>Potencia Óptica</title>
     <style>
+        body {
+            background-color: #000;
+            font-family: monospace;
+            color: #0f0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        .metadata {
+            margin-bottom: 20px;
+        }
+
         table {
-            width: 60%;
+            margin: auto;
             border-collapse: collapse;
-            margin: 20px auto;
-            text-align: center;
-            font-size: 18px;
+            color: #0f0;
         }
+
         th, td {
-            border: 1px solid black;
+            border: 1px solid #0f0;
             padding: 10px;
-            position: relative;
-            cursor: pointer;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .buttons {
+            min-width: 60px;
             text-align: center;
-            margin: 20px;
         }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 5px;
-            cursor: pointer;
+
+        th {
+            background-color: #111;
         }
-        .tooltip {
-            position: absolute;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 5px;
-            border-radius: 5px;
-            font-size: 14px;
-            white-space: nowrap;
+
+        .ok {
+            background-color: #0f0;
+            color: #000;
+        }
+
+        .warn {
+            background-color: #ff0;
+            color: #000;
+        }
+
+        .low {
+            background-color: #f00;
+            color: #fff;
+        }
+
+        .empty {
+            background-color: #333;
+            color: #888;
+        }
+
+        /* Modal styling */
+        .modal {
             display: none;
-            z-index: 10;
+            position: fixed;
+            z-index: 999;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #111;
+            border: 2px solid #0f0;
+            padding: 20px;
+            color: #0f0;
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+        }
+
+        .modal-content h3 {
+            margin-top: 0;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            color: #0f0;
+            font-size: 18px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <div class="buttons">
-        <button onclick="showMatrix(1)">Antes (9:30)</button>
-        <button onclick="showMatrix(2)">Después (9:55)</button>
-        <button onclick="Telegram.WebApp.close()">Close</button>
+<h2 id="table-title">Terminal</h2>
+<div class="metadata" id="test-info"></div>
+
+<table id="potencia-table">
+    <thead>
+    <tr id="column-header">
+        <th></th> <!-- empty corner -->
+    </tr>
+    </thead>
+    <tbody>
+    <tr id="potencia-row">
+        <td><strong>—</strong></td> <!-- label = terminal suffix -->
+    </tr>
+    </tbody>
+</table>
+
+<!-- Modal Box -->
+<div id="info-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="document.getElementById('info-modal').style.display='none'">&times;</span>
+        <h3>Detalles del Par</h3>
+        <div id="modal-body"></div>
     </div>
-    
-    <table id="matrixTable"></table>
+</div>
 
-    <script>
-        const messages = [
-            "Important Data", "Check this out!", "Warning!", "Low Value", "High Value Detected",
-            "Stable", "Monitor Closely", "Critical Alert", "Needs Review", "All Good"
-        ];
+<!-- Thymeleaf-injected JSON -->
+<script th:inline="javascript">
+    //let matrixData = /*[[${resultadoJson}]]*/ '{}';
+	let matrixData = `{
+		{
+   "Respuesta":{
+      "tipoPrueba":"porTerminal",
+      "fechaInicio":"2025-04-08 12:24:10",
+      "fechaFin":"2025-04-08 12:25:02",
+      "terminal":"BUR0036FOA8",
+      "cantidadPares":8,
+      "puertoPON":"BCNHGOR02118BUR0036F",
+      "par57":{
+         "telefono":"6865524574",
+         "estadoOperativo":"Up",
+         "estadoAdministrativo":"Up",
+         "potenciaOptica":-22.359999999999999,
+         "clasificacionPotencia":"Buena recepcion",
+         "vlan":"1759",
+         "serieModem":"HWTC7F90699E",
+         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-57",
+         "codigo":"000",
+         "descripcion":"EXITO"
+      },
+      "par58":{
+         "telefono":"6865659510",
+         "estadoOperativo":"Up",
+         "estadoAdministrativo":"Up",
+         "potenciaOptica":-26.990000000000002,
+         "clasificacionPotencia":"Parametros en limite",
+         "vlan":"1759",
+         "serieModem":"HWTC7F04B69E",
+         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-58",
+         "codigo":"000",
+         "descripcion":"EXITO"
+      },
+      "par59":{
+         "telefono":"6865545100",
+         "estadoOperativo":"Down",
+         "estadoAdministrativo":"Up",
+         "potenciaOptica":"",
+         "clasificacionPotencia":"Parametro fuera de rango",
+         "vlan":"1759",
+         "serieModem":"SCOM207C7E84",
+         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-59",
+         "codigo":"000",
+         "descripcion":"EXITO"
+      },
+      "par60":{
+         "telefono":"6865543672",
+         "estadoOperativo":"Down",
+         "estadoAdministrativo":"Up",
+         "potenciaOptica":"",
+         "clasificacionPotencia":"Parametro fuera de rango",
+         "vlan":"1759",
+         "serieModem":"SCOM201032FB",
+         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-60",
+         "codigo":"000",
+         "descripcion":"EXITO"
+      },
+      "par61":{
+         "telefono":"6865546572",
+         "estadoOperativo":"Up",
+         "estadoAdministrativo":"Up",
+         "potenciaOptica":-19.830000000000002,
+         "clasificacionPotencia":"Buena recepcion",
+         "vlan":"1759",
+         "serieModem":"HWTC933A269E",
+         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-61",
+         "codigo":"000",
+         "descripcion":"EXITO"
+      },
+      "par62":{
+         "telefono":"6865547203",
+         "estadoOperativo":"Up",
+         "estadoAdministrativo":"Up",
+         "potenciaOptica":-26.990000000000002,
+         "clasificacionPotencia":"Parametros en limite",
+         "vlan":"1759",
+         "serieModem":"HWTC9302559E",
+         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-62",
+         "codigo":"000",
+         "descripcion":"EXITO"
+      },
+      "par63":{
+         "telefono":"6865544692",
+         "estadoOperativo":"Up",
+         "estadoAdministrativo":"Up",
+         "potenciaOptica":-18.120000000000001,
+         "clasificacionPotencia":"Buena recepcion",
+         "vlan":"1759",
+         "serieModem":"HWTC54E8549E",
+         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-63",
+         "codigo":"000",
+         "descripcion":"EXITO"
+      },
+      "par64":{
+         "telefono":"",
+         "estadoOperativo":"Down",
+         "estadoAdministrativo":"Down",
+         "potenciaOptica":"",
+         "clasificacionPotencia":"Parametro fuera de rango",
+         "vlan":"",
+         "serieModem":"",
+         "dropID":"BCNGGONZALEZORTEG-02:0-0-17-6-64",
+         "codigo":"000",
+         "descripcion":"EXITO"
+      }
+   }
+}
+	}`;
+</script>
 
-        function getColor(value) {
-            if (value <= 25) return "green";
-            if (value <= 50) return "yellow";
-            if (value <= 75) return "orange";
-            return "red";
+<script>
+    const data = JSON.parse(matrixData);
+    const respuesta = data.Respuesta || {};
+
+    const terminal = respuesta.terminal || '';
+    const terminalPrefix = terminal.includes("FO") ? terminal.substring(0, terminal.indexOf("FO") + 2) : terminal;
+    const terminalSuffix = terminal.includes("FO") ? terminal.split("FO")[1] : '';
+
+    document.getElementById("table-title").textContent = `Terminal: ${terminalPrefix}`;
+
+    const testInfo = document.getElementById("test-info");
+    testInfo.innerHTML = `
+        <p><strong>Fecha de Inicio:</strong> ${respuesta.fechaInicio || 'N/A'}</p>
+    `;
+
+    const headerRow = document.getElementById("column-header");
+    const valueRow = document.getElementById("potencia-row");
+    valueRow.innerHTML = `<td><strong>${terminalSuffix || '—'}</strong></td>`;
+
+    const potenciaColor = (clasificacion) => {
+        const value = (clasificacion || '').toLowerCase();
+
+        if (value.includes('buena')) return 'ok';
+        if (value.includes('limite')) return 'warn';
+        if (value.includes('fuera')) return 'low';
+
+        return 'empty';
+    };
+
+    const showModal = (par) => {
+        const modal = document.getElementById("info-modal");
+        const body = document.getElementById("modal-body");
+
+        body.innerHTML = `
+            <p><strong>📞 Teléfono:</strong> ${par.telefono || '—'}</p>
+            <p><strong>📶 Estado Operativo:</strong> ${par.estadoOperativo || '—'}</p>
+            <p><strong>🛠 Estado Administrativo:</strong> ${par.estadoAdministrativo || '—'}</p>
+            <p><strong>🔦 Potencia Óptica:</strong> ${par.potenciaOptica || '—'}</p>
+            <p><strong>⚙ Clasificación:</strong> ${par.clasificacionPotencia || '—'}</p>
+            <p><strong>🛜 VLAN:</strong> ${par.vlan || '—'}</p>
+            <p><strong>🔧 Serie Módem:</strong> ${par.serieModem || '—'}</p>
+            <p><strong>🧵 Drop ID:</strong> ${par.dropID || '—'}</p>
+            <p><strong>🧾 Código:</strong> ${par.codigo || '—'}</p>
+            <p><strong>📋 Descripción:</strong> ${par.descripcion || '—'}</p>
+        `;
+
+        modal.style.display = 'flex';
+    };
+
+    const parKeys = Object.keys(respuesta)
+        .filter(k => /^par\d+$/i.test(k))
+        .sort((a, b) => parseInt(a.replace('par', '')) - parseInt(b.replace('par', '')));
+
+    parKeys.forEach((parKey, index) => {
+        const par = respuesta[parKey];
+        const potencia = par.potenciaOptica;
+        let displayValue = potencia;
+        if (potencia !== '' && !isNaN(potencia)) {
+            displayValue = parseFloat(potencia).toFixed(2);
         }
 
-        function generateMatrixJSON(rows, cols) {
-            let matrix = [];
-            for (let i = 0; i < rows; i++) {
-                let row = [];
-                for (let j = 0; j < cols; j++) {
-                    let value = Math.floor(Math.random() * 101);
-                    row.push({
-                        value: value,
-                        color: getColor(value),
-                        message: messages[Math.floor(Math.random() * messages.length)]
-                    });
-                }
-                matrix.push(row);
-            }
-            return matrix;
+        const th = document.createElement("th");
+        th.textContent = index + 1;
+        headerRow.appendChild(th);
+
+        const td = document.createElement("td");
+        td.textContent = displayValue || '—';
+        td.className = potenciaColor(par.clasificacionPotencia);
+        td.addEventListener("click", () => showModal(par));
+        valueRow.appendChild(td);
+    });
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('info-modal');
+        if (event.target === modal) {
+            modal.style.display = "none";
         }
-
-        let matrix1 = generateMatrixJSON(8, 8);
-        let matrix2 = generateMatrixJSON(8, 8);
-
-        function renderMatrix(matrix) {
-            let table = document.getElementById("matrixTable");
-            table.innerHTML = ""; // Clear table
-
-            let headerRow = table.insertRow();
-            let labelCell = headerRow.insertCell();
-            labelCell.textContent = "DIS0001FOA";
-            labelCell.colSpan = 1;
-            labelCell.style.fontWeight = "bold";
-
-            // Create column headers A-H
-            for (let i = 0; i < matrix[0].length; i++) {
-                let th = document.createElement("th");
-                th.textContent = String.fromCharCode(65 + i);
-                headerRow.appendChild(th);
-            }
-
-            for (let i = 0; i < matrix.length; i++) {
-                let row = table.insertRow();
-                let th = document.createElement("th");
-                th.textContent = i + 1;
-                row.appendChild(th);
-
-                for (let j = 0; j < matrix[i].length; j++) {
-                    let cell = row.insertCell();
-                    let cellData = matrix[i][j];
-
-                    cell.textContent = cellData.value;
-                    cell.style.backgroundColor = cellData.color;
-                    cell.style.color = "black";
-
-                    // Add tooltip effect
-                    let tooltip = document.createElement("div");
-                    tooltip.classList.add("tooltip");
-                    tooltip.textContent = `${cellData.message} (Cell: ${i + 1}${String.fromCharCode(65 + j)})`;
-                    cell.appendChild(tooltip);
-
-                    // Click event to show/hide tooltip
-                    cell.addEventListener("click", function (event) {
-                        hideAllTooltips();
-                        tooltip.style.display = "block";
-                        tooltip.style.left = "50%";
-                        tooltip.style.top = "-30px";
-                        tooltip.style.transform = "translateX(-50%)";
-                        event.stopPropagation(); // Prevent event from bubbling to document
-                    });
-                }
-            }
-        }
-
-        function showMatrix(matrixNumber) {
-            renderMatrix(matrixNumber === 1 ? matrix1 : matrix2);
-        }
-
-        function hideAllTooltips() {
-            document.querySelectorAll(".tooltip").forEach(tooltip => {
-                tooltip.style.display = "none";
-            });
-        }
-
-        // Hide tooltip when clicking outside a cell
-        document.addEventListener("click", hideAllTooltips);
-
-        window.onload = () => showMatrix(1);
-    </script>
+    };
+</script>
 
 </body>
 </html>
