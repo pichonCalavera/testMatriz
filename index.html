@@ -325,9 +325,12 @@
         modal.style.display = 'flex';
     };
 
-    const parKeys = respuestas.length > 0 ? Object.keys(respuestas[0])
-        .filter(k => /^par\d+$/i.test(k))
-        .sort((a, b) => parseInt(a.replace('par', '')) - parseInt(b.replace('par', ''))) : [];
+    const parKeys = [...new Set(
+        respuestas.flatMap(r =>
+            Object.keys(r).filter(k => /^par\\d+$/i.test(k))
+        )
+    )].sort((a, b) => parseInt(a.replace('par', '')) - parseInt(b.replace('par', '')));
+
 
     // Create table with shared headers
     const table = document.createElement("table");
