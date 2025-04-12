@@ -29,6 +29,7 @@
             text-align: center;
             font-size: 1rem;
             word-wrap: break-word;
+            cursor: pointer;
         }
         th {
             background-color: #111;
@@ -104,20 +105,22 @@
         return 'empty';
     };
 
-    const showModal = (par) => {
+    const showModal = (par, terminal = '', parLabel = '') => {
         const modal = document.getElementById("info-modal");
         const body = document.getElementById("modal-body");
         body.innerHTML = `
-            <p><strong>📞 Teléfono:</strong> ${par.telefono || '—'}</p>
-            <p><strong>📶 Estado Operativo:</strong> ${par.estadoOperativo || '—'}</p>
-            <p><strong>🛠 Estado Administrativo:</strong> ${par.estadoAdministrativo || '—'}</p>
-            <p><strong>🔦 Potencia Óptica:</strong> ${par.potenciaOptica || '—'}</p>
-            <p><strong>⚙ Clasificación:</strong> ${par.clasificacionPotencia || '—'}</p>
-            <p><strong>🛜 VLAN:</strong> ${par.vlan || '—'}</p>
-            <p><strong>🔧 Serie Módem:</strong> ${par.serieModem || '—'}</p>
-            <p><strong>🧵 Drop ID:</strong> ${par.dropID || '—'}</p>
-            <p><strong>🧾 Código:</strong> ${par.codigo || '—'}</p>
-            <p><strong>📋 Descripción:</strong> ${par.descripcion || '—'}</p>
+            <p><strong>🖥️ Terminal:</strong> ${terminal || '—'}</p>
+            <p><strong>🔢 Par:</strong> ${parLabel || '—'}</p>
+            <p><strong>📞 Teléfono:</strong> ${par?.telefono || '—'}</p>
+            <p><strong>📶 Estado Operativo:</strong> ${par?.estadoOperativo || '—'}</p>
+            <p><strong>🛠 Estado Administrativo:</strong> ${par?.estadoAdministrativo || '—'}</p>
+            <p><strong>🔦 Potencia Óptica:</strong> ${par?.potenciaOptica || '—'}</p>
+            <p><strong>⚙ Clasificación:</strong> ${par?.clasificacionPotencia || '—'}</p>
+            <p><strong>🛜 VLAN:</strong> ${par?.vlan || '—'}</p>
+            <p><strong>🔧 Serie Módem:</strong> ${par?.serieModem || '—'}</p>
+            <p><strong>🧵 Drop ID:</strong> ${par?.dropID || '—'}</p>
+            <p><strong>🧾 Código:</strong> ${par?.codigo || '—'}</p>
+            <p><strong>📋 Descripción:</strong> ${par?.descripcion || '—'}</p>
         `;
         modal.style.display = 'flex';
     };
@@ -148,7 +151,10 @@
         const terminal = respuesta.terminal || `Terminal ${index + 1}`;
         const suffix = terminal.split("FO")[1] || '?';
         const row = document.createElement("tr");
-        row.innerHTML = `<td><strong>${suffix}</strong></td>`;
+        const tdHeader = document.createElement("td");
+        tdHeader.innerHTML = `<strong>${suffix}</strong>`;
+        tdHeader.onclick = () => showModal(null, terminal);
+        row.appendChild(tdHeader);
 
         const parKeys = terminalParKeys[index];
 
@@ -165,7 +171,7 @@
                 }
                 td.textContent = display || '—';
                 td.className = potenciaColor(par.clasificacionPotencia);
-                td.onclick = () => showModal(par);
+                td.onclick = () => showModal(par, terminal, key.replace('par', ''));
             } else {
                 td.textContent = '—';
                 td.className = 'empty';
