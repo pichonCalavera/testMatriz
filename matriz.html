@@ -1,156 +1,229 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color-Coded Matrix with JSON (Click Tooltip)</title>
+    <title>Matrices por Terminal</title>
     <style>
-        table {
-            width: 60%;
-            border-collapse: collapse;
-            margin: 20px auto;
+        body {
+            background-color: #000;
+            font-family: monospace;
+            color: #fff;
+            padding: 1px;
+        }
+        h2 {
+            margin: 10px 0 5px;
+            font-size: 1.0rem;
             text-align: center;
-            font-size: 18px;
+        }
+        table {
+            margin: 0 auto 40px auto;
+            border-collapse: collapse;
+            color: #fff;
+            width: 100%;
+            table-layout: fixed;
         }
         th, td {
-            border: 1px solid black;
-            padding: 10px;
-            position: relative;
+            border: 1px solid #fff;
+            padding: 2px;
+            text-align: center;
+            font-size: 0.30rem;
+            word-wrap: normal;
             cursor: pointer;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: #111;
         }
-        .buttons {
-            text-align: center;
-            margin: 20px;
+        .ok { background-color: #0f0; color: #000; }
+        .warn { background-color: #ff0; color: #000; }
+        .low { background-color: #f00; color: #fff; }
+        .empty { background-color: #333; color: #888; }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
         }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 5px;
+        .modal-content {
+            background-color: #111;
+            border: 2px solid #fff;
+            padding: 20px;
+            color: #fff;
+            max-width: 90%;
+            font-size: 1.2rem;
+            line-height: 1.5;
+        }
+        .modal-content p { margin: 8px 0; }
+        .close-btn {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            color: #fff;
+            font-size: 20px;
             cursor: pointer;
         }
-        .tooltip {
-            position: absolute;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 5px;
-            border-radius: 5px;
-            font-size: 14px;
-            white-space: nowrap;
-            display: none;
-            z-index: 10;
-        }
+        @media (max-width: 768px) {
+    th, td {
+        font-size: 0.7rem;
+        padding: 8px;      /* increases vertical spacing */
+        height: 30px;      /* optional: sets fixed height */
+        line-height: 1.4;  /* improves readability */
+    }
+}
     </style>
 </head>
 <body>
 
-    <div class="buttons">
-        <button onclick="showMatrix(1)">Antes (9:30)</button>
-        <button onclick="showMatrix(2)">Después (9:55)</button>
+<div id="info-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="document.getElementById('info-modal').style.display='none'">&times;</span>
+        <h3>Detalles del Par</h3>
+        <div id="modal-body"></div>
     </div>
-    
-    <table id="matrixTable"></table>
+</div>
 
-    <script>
-        const messages = [
-            "Important Data", "Check this out!", "Warning!", "Low Value", "High Value Detected",
-            "Stable", "Monitor Closely", "Critical Alert", "Needs Review", "All Good"
-        ];
+<table id="matrix-table"></table>
 
-        function getColor(value) {
-            if (value <= 25) return "green";
-            if (value <= 50) return "yellow";
-            if (value <= 75) return "orange";
-            return "red";
-        }
+<div id="cambios-container">
+    <ul>
+        <li th:each="cambio : ${cambios}" th:text="${cambio}"></li>
+    </ul>
+</div>
 
-        function generateMatrixJSON(rows, cols) {
-            let matrix = [];
-            for (let i = 0; i < rows; i++) {
-                let row = [];
-                for (let j = 0; j < cols; j++) {
-                    let value = Math.floor(Math.random() * 101);
-                    row.push({
-                        value: value,
-                        color: getColor(value),
-                        message: messages[Math.floor(Math.random() * messages.length)]
-                    });
+<script th:inline="javascript">
+    let matrixData = {"Respuesta":{"tipoPrueba":"porTerminal","idPeticionOrigen":"1321","idPeticion":"VFO_20250723120043362","fechaInicio":"2025-07-23 12:00:43.862476","fechaFin":"2025-07-23 12:03:19.117692","terminal":"FRA0002FOG1,FRA0002FOG2,FRA0002FOG3,FRA0002FOG4,FRA0002FOG5,FRA0002FOG6,FRA0002FOG7,FRA0002FOG8,FRA0002FOG9","cantidadTerminales":"9","terminal1":{"Respuesta":{"tipoPrueba":"porTerminal","fechaInicio":"2025-07-23 14:00:43","fechaFin":"2025-07-23 14:01:31","terminal":"FRA0002FOG1","cantidadPares":8,"puertoPON":"BCNABUE07144FRA0002F","par1":{"telefono":"6645437164","estadoOperativo":"Up","estadoAdministrativo":"Up","potenciaOptica":-18.042000000000002,"clasificacionPotencia":"Buena recepcion","vlan":"1774","serieModem":"ALCLFC664E04","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-1","codigo":"000","descripcion":"EXITO"},"par2":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-2","codigo":"000","descripcion":"EXITO"},"par3":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-3","codigo":"000","descripcion":"EXITO"},"par4":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-4","codigo":"000","descripcion":"EXITO"},"par5":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-5","codigo":"000","descripcion":"EXITO"},"par6":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-6","codigo":"000","descripcion":"EXITO"},"par7":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-7","codigo":"000","descripcion":"EXITO"},"par8":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-8","codigo":"000","descripcion":"EXITO"}}},"terminal2":{"Respuesta":{"tipoPrueba":"porTerminal","fechaInicio":"2025-07-23 14:00:59","fechaFin":"2025-07-23 14:01:49","terminal":"FRA0002FOG2","cantidadPares":8,"puertoPON":"BCNABUE07144FRA0002F","par1":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-9","codigo":"000","descripcion":"EXITO"},"par2":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-10","codigo":"000","descripcion":"EXITO"},"par3":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-11","codigo":"000","descripcion":"EXITO"},"par4":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-12","codigo":"000","descripcion":"EXITO"},"par5":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-13","codigo":"000","descripcion":"EXITO"},"par6":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-14","codigo":"000","descripcion":"EXITO"},"par7":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-15","codigo":"000","descripcion":"EXITO"},"par8":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-16","codigo":"000","descripcion":"EXITO"}}},"terminal3":{"Respuesta":{"tipoPrueba":"porTerminal","fechaInicio":"2025-07-23 14:01:14","fechaFin":"2025-07-23 14:02:02","terminal":"FRA0002FOG3","cantidadPares":8,"puertoPON":"BCNABUE07144FRA0002F","par1":{"telefono":"6641020881","estadoOperativo":"Up","estadoAdministrativo":"Up","potenciaOptica":-21.800000000000001,"clasificacionPotencia":"Buena recepcion","vlan":"1774","serieModem":"HWTC68183EAF","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-17","codigo":"000","descripcion":"EXITO"},"par2":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-18","codigo":"000","descripcion":"EXITO"},"par3":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-19","codigo":"000","descripcion":"EXITO"},"par4":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-20","codigo":"000","descripcion":"EXITO"},"par5":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-21","codigo":"000","descripcion":"EXITO"},"par6":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-22","codigo":"000","descripcion":"EXITO"},"par7":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-23","codigo":"000","descripcion":"EXITO"},"par8":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-24","codigo":"000","descripcion":"EXITO"}}},"terminal4":{"Respuesta":{"tipoPrueba":"porTerminal","fechaInicio":"2025-07-23 14:01:29","fechaFin":"2025-07-23 14:02:16","terminal":"FRA0002FOG4","cantidadPares":8,"puertoPON":"BCNABUE07144FRA0002F","par1":{"telefono":"6646607800","estadoOperativo":"Up","estadoAdministrativo":"Up","potenciaOptica":-17.696000000000002,"clasificacionPotencia":"Buena recepcion","vlan":"1774","serieModem":"ALCLB36516F4","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-25","codigo":"000","descripcion":"EXITO"},"par2":{"telefono":"6641042727","estadoOperativo":"Up","estadoAdministrativo":"Up","potenciaOptica":-16.757999999999999,"clasificacionPotencia":"Buena recepcion","vlan":"1774","serieModem":"ZTEG24521148","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-26","codigo":"000","descripcion":"EXITO"},"par3":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-27","codigo":"000","descripcion":"EXITO"},"par4":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-28","codigo":"000","descripcion":"EXITO"},"par5":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-29","codigo":"000","descripcion":"EXITO"},"par6":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-30","codigo":"000","descripcion":"EXITO"},"par7":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-31","codigo":"000","descripcion":"EXITO"},"par8":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-32","codigo":"000","descripcion":"EXITO"}}},"terminal5":{"Respuesta":{"tipoPrueba":"porTerminal","fechaInicio":"2025-07-23 14:01:44","fechaFin":"2025-07-23 14:02:35","terminal":"FRA0002FOG5","cantidadPares":8,"puertoPON":"BCNABUE07144FRA0002F","par1":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-33","codigo":"000","descripcion":"EXITO"},"par2":{"telefono":"6646504241","estadoOperativo":"Up","estadoAdministrativo":"Up","potenciaOptica":-19.384,"clasificacionPotencia":"Buena recepcion","vlan":"1774","serieModem":"HWTC79655EAF","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-34","codigo":"000","descripcion":"EXITO"},"par3":{"telefono":"6646760853","estadoOperativo":"Down","estadoAdministrativo":"Up","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"1774","serieModem":"HWTC83C7CAAF","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-35","codigo":"000","descripcion":"EXITO"},"par4":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-36","codigo":"000","descripcion":"EXITO"},"par5":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-37","codigo":"000","descripcion":"EXITO"},"par6":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-38","codigo":"000","descripcion":"EXITO"},"par7":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-39","codigo":"000","descripcion":"EXITO"},"par8":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-40","codigo":"000","descripcion":"EXITO"}}},"terminal6":{"Respuesta":{"tipoPrueba":"porTerminal","fechaInicio":"2025-07-23 14:01:59","fechaFin":"2025-07-23 14:02:47","terminal":"FRA0002FOG6","cantidadPares":8,"puertoPON":"BCNABUE07144FRA0002F","par1":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-41","codigo":"000","descripcion":"EXITO"},"par2":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-42","codigo":"000","descripcion":"EXITO"},"par3":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-43","codigo":"000","descripcion":"EXITO"},"par4":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-44","codigo":"000","descripcion":"EXITO"},"par5":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-45","codigo":"000","descripcion":"EXITO"},"par6":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-46","codigo":"000","descripcion":"EXITO"},"par7":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-47","codigo":"000","descripcion":"EXITO"},"par8":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-48","codigo":"000","descripcion":"EXITO"}}},"terminal7":{"Respuesta":{"tipoPrueba":"porTerminal","fechaInicio":"2025-07-23 14:02:14","fechaFin":"2025-07-23 14:03:05","terminal":"FRA0002FOG7","cantidadPares":8,"puertoPON":"BCNABUE07144FRA0002F","par1":{"telefono":"6646886528","estadoOperativo":"Up","estadoAdministrativo":"Up","potenciaOptica":-23.948,"clasificacionPotencia":"Buena recepcion","vlan":"1774","serieModem":"ZTEG24521068","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-49","codigo":"000","descripcion":"EXITO"},"par2":{"telefono":"6646229536","estadoOperativo":"Up","estadoAdministrativo":"Up","potenciaOptica":-24.155999999999999,"clasificacionPotencia":"Buena recepcion","vlan":"1774","serieModem":"HWTCEC7EA9AE","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-50","codigo":"000","descripcion":"EXITO"},"par3":{"telefono":"6646080641","estadoOperativo":"Down","estadoAdministrativo":"Up","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"1774","serieModem":"HWTC1FDA93B1","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-51","codigo":"000","descripcion":"EXITO"},"par4":{"telefono":"6649063797","estadoOperativo":"Up","estadoAdministrativo":"Up","potenciaOptica":-21.646000000000001,"clasificacionPotencia":"Buena recepcion","vlan":"1774","serieModem":"HWTC7B87C6AF","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-52","codigo":"000","descripcion":"EXITO"},"par5":{"telefono":"6649699836","estadoOperativo":"Up","estadoAdministrativo":"Up","potenciaOptica":-20.262,"clasificacionPotencia":"Buena recepcion","vlan":"1774","serieModem":"HWTC44DDF7AF","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-53","codigo":"000","descripcion":"EXITO"},"par6":{"telefono":"6641023876","estadoOperativo":"Up","estadoAdministrativo":"Up","potenciaOptica":-22.620000000000001,"clasificacionPotencia":"Buena recepcion","vlan":"1774","serieModem":"HWTC242CEFAF","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-54","codigo":"000","descripcion":"EXITO"},"par7":{"telefono":"6649047836","estadoOperativo":"Down","estadoAdministrativo":"Up","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"1774","serieModem":"ARTE1750C7FF","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-55","codigo":"000","descripcion":"EXITO"},"par8":{"telefono":"6649722510","estadoOperativo":"Up","estadoAdministrativo":"Up","potenciaOptica":-24.315999999999999,"clasificacionPotencia":"Buena recepcion","vlan":"1774","serieModem":"SCOM228646E2","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-56","codigo":"000","descripcion":"EXITO"}}},"terminal8":{"Respuesta":{"tipoPrueba":"porTerminal","fechaInicio":"2025-07-23 14:02:29","fechaFin":"2025-07-23 14:03:17","terminal":"FRA0002FOG8","cantidadPares":8,"puertoPON":"BCNABUE07144FRA0002F","par1":{"telefono":"6642085339","estadoOperativo":"Up","estadoAdministrativo":"Up","potenciaOptica":-21.400000000000002,"clasificacionPotencia":"Buena recepcion","vlan":"1774","serieModem":"HWTC1FED4DB1","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-57","codigo":"000","descripcion":"EXITO"},"par2":{"telefono":"6646853193","estadoOperativo":"Up","estadoAdministrativo":"Up","potenciaOptica":-21.192,"clasificacionPotencia":"Buena recepcion","vlan":"1774","serieModem":"PING15340207","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-58","codigo":"000","descripcion":"EXITO"},"par3":{"telefono":"6649049588","estadoOperativo":"Down","estadoAdministrativo":"Up","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"1774","serieModem":"ARTE1750A6FA","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-59","codigo":"000","descripcion":"EXITO"},"par4":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-60","codigo":"000","descripcion":"EXITO"},"par5":{"telefono":"6646888681","estadoOperativo":"Down","estadoAdministrativo":"Up","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"1774","serieModem":"ALCLFC48D24B","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-61","codigo":"000","descripcion":"EXITO"},"par6":{"telefono":"6646618959","estadoOperativo":"Up","estadoAdministrativo":"Up","potenciaOptica":-23.559999999999999,"clasificacionPotencia":"Buena recepcion","vlan":"1774","serieModem":"ZTEG24521E90","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-62","codigo":"000","descripcion":"EXITO"},"par7":{"telefono":"6612137894","estadoOperativo":"Up","estadoAdministrativo":"Up","potenciaOptica":-20.603999999999999,"clasificacionPotencia":"Buena recepcion","vlan":"1774","serieModem":"ALCLFC446674","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-63","codigo":"000","descripcion":"EXITO"},"par8":{"telefono":"6649024371","estadoOperativo":"Up","estadoAdministrativo":"Up","potenciaOptica":-20.071999999999999,"clasificacionPotencia":"Buena recepcion","vlan":"1774","serieModem":"HWTC2ECFE3AF","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-64","codigo":"000","descripcion":"EXITO"}}},"terminal9":{"Respuesta":{"tipoPrueba":"porTerminal","fechaInicio":"2025-07-23 14:02:44","fechaFin":"2025-07-23 14:03:30","terminal":"FRA0002FOG9","cantidadPares":8,"puertoPON":"BCNABUE07144FRA0002F","par1":{"telefono":"6649762251","estadoOperativo":"Up","estadoAdministrativo":"Up","potenciaOptica":-24.202000000000002,"clasificacionPotencia":"Buena recepcion","vlan":"1774","serieModem":"ALCLFC664FAD","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-65","codigo":"000","descripcion":"EXITO"},"par2":{"telefono":"6646810203","estadoOperativo":"Up","estadoAdministrativo":"Up","potenciaOptica":-23.484000000000002,"clasificacionPotencia":"Buena recepcion","vlan":"1774","serieModem":"HWTC0EA761B1","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-66","codigo":"000","descripcion":"EXITO"},"par3":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-67","codigo":"000","descripcion":"EXITO"},"par4":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-68","codigo":"000","descripcion":"EXITO"},"par5":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-69","codigo":"000","descripcion":"EXITO"},"par6":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-70","codigo":"000","descripcion":"EXITO"},"par7":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-71","codigo":"000","descripcion":"EXITO"},"par8":{"telefono":"","estadoOperativo":"Down","estadoAdministrativo":"Down","potenciaOptica":"","clasificacionPotencia":"Parametro fuera de rango","vlan":"","serieModem":"","dropID":"BCNGBUENOSAIRES-07:1-1-9-16-72","codigo":"000","descripcion":"EXITO"}}}}};
+    matrixData = JSON.parse(matrixData);
+</script>
+
+<script>
+    const fechaInicio = matrixData.Respuesta.fechaInicio || '—';
+    const fechaFin = matrixData.Respuesta.fechaFin || '—';
+    const terminalesConsultadas = matrixData.Respuesta.terminal || '—';
+	
+	fechaInicioFormato = fechaInicio.substring(11, 19);
+	terminalConsultadaFormato = terminalesConsultadas.substring(0,10);
+	
+	//const encabezadoGlobal = document.createElement("div");
+    //encabezadoGlobal.innerHTML = `
+    //        <p><strong>${terminalesConsultadas}</strong></p>
+    //        <p><strong>${fechaInicio}</strong></p>
+    //`;
+	
+    const respuestas = matrixData.Respuesta || {};
+    const table = document.getElementById("matrix-table");
+	
+	
+
+    const potenciaColor = (clasificacion) => {
+        const value = (clasificacion || '').toLowerCase();
+        if (value.includes('buena')) return 'ok';
+        if (value.includes('limite')) return 'warn';
+        if (value.includes('malos')) return 'low';
+        if (value.includes('fuera')) return 'empty'
+        return 'empty';
+    };
+
+    const showModal = (par, terminal = '', parLabel = '') => {
+        const modal = document.getElementById("info-modal");
+        const body = document.getElementById("modal-body");
+        body.innerHTML = `
+            <p><strong>Terminal:</strong> ${terminal || '—'}</p>
+            <p><strong>Par:</strong> ${parLabel || '—'}</p>
+            <p><strong>Teléfono:</strong> ${par?.telefono || '—'}</p>
+            <p><strong>Estado Operativo:</strong> ${par?.estadoOperativo || '—'}</p>
+            <p><strong>Estado Administrativo:</strong> ${par?.estadoAdministrativo || '—'}</p>
+            <p><strong>Potencia Óptica:</strong> ${par?.potenciaOptica || '—'}</p>
+            <p><strong>Clasificación:</strong> ${par?.clasificacionPotencia || '—'}</p>
+            <p><strong>VLAN:</strong> ${par?.vlan || '—'}</p>
+            <p><strong>Serie Módem:</strong> ${par?.serieModem || '—'}</p>
+            <p><strong>Drop ID:</strong> ${par?.dropID || '—'}</p>
+            <p><strong>Código:</strong> ${par?.codigo || '—'}</p>
+            <p><strong>Descripción:</strong> ${par?.descripcion || '—'}</p>
+        `;
+        modal.style.display = 'flex';
+    };
+
+    const terminalKeys = Object.keys(respuestas).filter(k => /^terminal\d+$/i.test(k));
+
+    let maxColumns = 0;
+    const terminalParKeys = terminalKeys.map(key => {
+        const respuestaInterna = respuestas[key]?.Respuesta || {};
+        const keys = Object.keys(respuestaInterna)
+            .filter(k => /^par\d+$/i.test(k))
+            .sort((a, b) => parseInt(a.replace('par', '')) - parseInt(b.replace('par', '')));
+        maxColumns = Math.max(maxColumns, keys.length);
+        return keys;
+    });
+
+    const thead = document.createElement("thead");
+	const encabezado = document.createElement("encabezado");
+	encabezado.innerHTML = `
+			<p><strong>${terminalConsultadaFormato} ${fechaInicioFormato}</strong></p>	          
+			`;
+    const headerRow = document.createElement("tr");
+    headerRow.innerHTML = `<th></th>`;
+    for (let i = 1; i <= maxColumns; i++) {
+        const th = document.createElement("th");
+        th.textContent = i;
+        headerRow.appendChild(th);
+    }
+	thead.appendChild(encabezado);	
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+
+    terminalKeys.forEach((key, index) => {
+        const respuestaInterna = respuestas[key]?.Respuesta || {};
+        const terminal = respuestaInterna.terminal || `Terminal ${index + 1}`;
+        const suffix = terminal.slice(-2);
+        const row = document.createElement("tr");
+        const tdHeader = document.createElement("td");
+        tdHeader.innerHTML = `<strong>${suffix}</strong>`;
+        tdHeader.onclick = () => showModal(null, terminal);
+        row.appendChild(tdHeader);
+
+        const parKeys = terminalParKeys[index];
+
+        for (let i = 0; i < maxColumns; i++) {
+            const parKey = parKeys[i];
+            const par = parKey ? respuestaInterna[parKey] : null;
+            const td = document.createElement("td");
+
+            if (par) {
+                const potencia = par.potenciaOptica;
+                let display = potencia;
+                if (potencia !== '' && !isNaN(potencia)) {
+                    display = parseFloat(potencia).toFixed(1);
                 }
-                matrix.push(row);
-            }
-            return matrix;
-        }
-
-        let matrix1 = generateMatrixJSON(8, 8);
-        let matrix2 = generateMatrixJSON(8, 8);
-
-        function renderMatrix(matrix) {
-            let table = document.getElementById("matrixTable");
-            table.innerHTML = ""; // Clear table
-
-            let headerRow = table.insertRow();
-            let labelCell = headerRow.insertCell();
-            labelCell.textContent = "DIS0001FOA";
-            labelCell.colSpan = 1;
-            labelCell.style.fontWeight = "bold";
-
-            // Create column headers A-H
-            for (let i = 0; i < matrix[0].length; i++) {
-                let th = document.createElement("th");
-                th.textContent = String.fromCharCode(65 + i);
-                headerRow.appendChild(th);
+                td.textContent = display || '—';
+                td.className = potenciaColor(par.clasificacionPotencia);
+                td.onclick = () => showModal(par, terminal, parKey.replace('par', ''));
+            } else {
+                td.textContent = '—';
+                td.className = 'empty';
             }
 
-            for (let i = 0; i < matrix.length; i++) {
-                let row = table.insertRow();
-                let th = document.createElement("th");
-                th.textContent = i + 1;
-                row.appendChild(th);
-
-                for (let j = 0; j < matrix[i].length; j++) {
-                    let cell = row.insertCell();
-                    let cellData = matrix[i][j];
-
-                    cell.textContent = cellData.value;
-                    cell.style.backgroundColor = cellData.color;
-                    cell.style.color = "black";
-
-                    // Add tooltip effect
-                    let tooltip = document.createElement("div");
-                    tooltip.classList.add("tooltip");
-                    tooltip.textContent = `${cellData.message} (Cell: ${i + 1}${String.fromCharCode(65 + j)})`;
-                    cell.appendChild(tooltip);
-
-                    // Click event to show/hide tooltip
-                    cell.addEventListener("click", function (event) {
-                        hideAllTooltips();
-                        tooltip.style.display = "block";
-                        tooltip.style.left = "50%";
-                        tooltip.style.top = "-30px";
-                        tooltip.style.transform = "translateX(-50%)";
-                        event.stopPropagation(); // Prevent event from bubbling to document
-                    });
-                }
-            }
+            row.appendChild(td);
         }
 
-        function showMatrix(matrixNumber) {
-            renderMatrix(matrixNumber === 1 ? matrix1 : matrix2);
+        tbody.appendChild(row);
+    });
+
+    table.appendChild(tbody);
+
+    window.onclick = (event) => {
+        const modal = document.getElementById("info-modal");
+        if (event.target === modal) {
+            modal.style.display = "none";
         }
-
-        function hideAllTooltips() {
-            document.querySelectorAll(".tooltip").forEach(tooltip => {
-                tooltip.style.display = "none";
-            });
-        }
-
-        // Hide tooltip when clicking outside a cell
-        document.addEventListener("click", hideAllTooltips);
-
-        window.onload = () => showMatrix(1);
-    </script>
+    }
+</script>
 
 </body>
 </html>
