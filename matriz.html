@@ -201,6 +201,10 @@
                 let display = potencia;
                 if (potencia !== '' && !isNaN(potencia)) {
                     display = parseFloat(potencia).toFixed(1);
+		    // Reemplaza el signo de menos con uno mas corto, codigo U+FE63
+			if (display.startsWith('-')) {
+				display = '﹣' + display.substring(1); // U+FE63
+			}
                 }
                 td.textContent = display || '—';
                 td.className = potenciaColor(par.clasificacionPotencia);
